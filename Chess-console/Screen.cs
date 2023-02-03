@@ -1,5 +1,6 @@
 ﻿using System;
-using Entities;
+using boardgame;
+
 namespace Chess_console
 {
     internal class Screen
@@ -16,7 +17,7 @@ namespace Chess_console
                     }
                     else
                     {
-                        Console.Write(bd.piece(i, j) + "- ");
+                        Console.Write(bd.piece(i, j) + " ");
                     }
                 }
                 Console.WriteLine();

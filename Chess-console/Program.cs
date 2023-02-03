@@ -1,10 +1,16 @@
 ﻿using Chess_console;
-using Entities;
+using boardgame;
+using chess;
+
 internal class Program
 {
     private static void Main(string[] args)
     {
         Board chessbd = new Board(8, 8);
+        chessbd.PutPiece(new Tower(chessbd, Color.black), new Position(0, 0));
+        chessbd.PutPiece(new King(chessbd, Color.black), new Position(0, 3));
+        chessbd.PutPiece(new Tower(chessbd, Color.black), new Position(2, 4));
+
         Screen.PrintBoard(chessbd);
         
     }

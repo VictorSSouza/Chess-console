@@ -1,14 +1,14 @@
 ﻿
-namespace Entities
+namespace boardgame
 {
     internal class Position
     {
         public int Row { get; set; }
         public int Column { get; set; }
 
-        public Position(int line, int column)
+        public Position(int row, int column)
         {
-            Row = Row;
+            Row = row;
             Column = column;
         }
 

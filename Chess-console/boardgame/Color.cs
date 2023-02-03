@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Entities
+namespace boardgame
 {
     enum Color
     {

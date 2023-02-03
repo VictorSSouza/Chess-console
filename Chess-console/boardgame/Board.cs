@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Entities
+namespace boardgame
 {
     internal class Board
     {
@@ -15,6 +15,11 @@ namespace Entities
         public Piece piece(int row, int column)
         {
             return _pieces[row, column];
+        }
+        public void PutPiece(Piece p, Position pos)
+        {
+            _pieces[pos.Row, pos.Column] = p;
+            p.position = pos;
         }
     }
 }
