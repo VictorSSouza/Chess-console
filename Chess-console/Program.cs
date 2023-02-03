@@ -1,2 +1,10 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Entities;
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        Board chessbd = new Board(8, 8);
+        
+        
+    }
+}
