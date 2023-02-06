@@ -16,5 +16,9 @@ namespace boardgame
             this.board = board;
             this.QtyMoves = 0;
         }
+        public void IncrementQtyMovements()
+        {
+            QtyMoves++;
+        }
     }
 }

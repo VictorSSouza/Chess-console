@@ -41,5 +41,17 @@ namespace boardgame
             _pieces[pos.Row, pos.Column] = p;
             p.position = pos;
         }
+        public Piece RemovePiece(Position pos)
+        {
+            if (piece(pos) == null)
+            {
+                return null;
+            }
+            Piece aux = piece(pos);
+            aux.position = null;
+            _pieces[pos.Row, pos.Column] = null;
+            return aux;
+        }
+        
     }
 }

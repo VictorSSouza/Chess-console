@@ -8,19 +8,28 @@ internal class Program
     {
         try
         {
-            Board board = new Board(8, 8);
+            ChessMatch match = new ChessMatch();
+            while (!match.finished)
+            {
 
-            board.PutPiece(new Tower(board, Color.black), new Position(0, 0));
-            board.PutPiece(new King(board, Color.black), new Position(2, 3));
-            board.PutPiece(new Tower(board, Color.black), new Position(1, 7));
-            board.PutPiece(new Tower(board, Color.white), new Position(5, 4));
+                Console.Clear();
+                Screen.PrintBoard(match.board);
 
-            Screen.PrintBoard(board);
+                Console.WriteLine();
+                Console.Write("Origin:");
+                Position origin = Screen.ReadChessPosition().ToPosition();
+
+                Console.Write("Destiny: ");
+                Position destiny = Screen.ReadChessPosition().ToPosition();
+
+                match.Performsmovement(origin, destiny);
+            }
+
 
         }
-        catch(BoardException e)
+        catch (BoardException e)
         {
-            Console.WriteLine("Board Error "+ e.Message);
+            Console.WriteLine("Board Error " + e.Message);
         }
     }
 }
