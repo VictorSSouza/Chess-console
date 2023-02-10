@@ -1,57 +1,58 @@
-﻿using System;
-namespace boardgame
-{
-    internal class Board
-    {
+﻿namespace boardgame {
+    class Board {
+
         public int rows { get; set; }
         public int columns { get; set; }
-        private Piece[,] _pieces;
-        public Board(int rows, int columns)
-        {
+        private Piece[,] pieces;
+
+        public Board(int rows, int columns) {
             this.rows = rows;
             this.columns = columns;
-            _pieces = new Piece[rows, columns];
+            pieces = new Piece[rows, columns]; 
         }
-        public Piece piece(int row, int column)
-        {
-            return _pieces[row, column];
+
+        public Piece piece(int row, int column) {
+            return pieces[row, column];
         }
-        public Piece piece(Position pos)
-        {
-            return _pieces[pos.Row, pos.Column];
+
+        public Piece piece(Position pos) {
+            return pieces[pos.row, pos.column];
         }
-        public bool ValidPosition(Position pos)
-        {
-            if(pos.Row < 0|| pos.Row >= rows || pos.Column < 0 || pos.Column >= columns) return false;
-            
-            return true;
-        }
-        public void ValidatePosition(Position pos)
-        {
-            if(!ValidPosition(pos)) throw new BoardException("Invalid position!");
-        }
-        public bool PieceExists(Position pos)
-        {
-            ValidatePosition(pos);
+
+        public bool PieceExists(Position pos) {
+            validatePosition(pos);
             return piece(pos) != null;
         }
-        public void PutPiece(Piece p, Position pos)
-        {
-            if (PieceExists(pos)) throw new BoardException("This piece already exists!");
-            _pieces[pos.Row, pos.Column] = p;
+
+        public void PutPiece(Piece p, Position pos) {
+            if (PieceExists(pos)) {
+                throw new BoardException("Já existe uma peça nessa posição!");
+            }
+            pieces[pos.row, pos.column] = p;
             p.position = pos;
         }
-        public Piece RemovePiece(Position pos)
-        {
-            if (piece(pos) == null)
-            {
+
+        public Piece removePiece(Position pos) {
+            if (piece(pos) == null) {
                 return null;
             }
             Piece aux = piece(pos);
             aux.position = null;
-            _pieces[pos.Row, pos.Column] = null;
+            pieces[pos.row, pos.column] = null;
             return aux;
         }
-        
+
+        public bool ValidPosition(Position pos) {
+            if (pos.row <0 || pos.row >=rows || pos.column <0 || pos.column >=columns) {
+                return false;
+            }
+            return true;
+        }
+
+        public void validatePosition(Position pos) {
+            if (!ValidPosition(pos)) {
+                throw new BoardException("Posição inválida!");
+            }
+        }
     }
 }

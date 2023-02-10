@@ -1,14 +1,12 @@
-﻿using System;
-namespace boardgame
-{
-    enum Color
-    {
-        white,
-        black,
-        red,
-        blue,
-        green,
-        yellow,
-        orange
+﻿namespace boardgame {
+    enum Color {
+
+        Branca,
+        Preta,
+        Amarela,
+        Azul,
+        Vermelha,
+        Verde,
+        Laranja
     }
 }

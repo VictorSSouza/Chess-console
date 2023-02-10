@@ -1,21 +1,23 @@
-﻿
-namespace boardgame
-{
-    internal class Position
-    {
-        public int Row { get; set; }
-        public int Column { get; set; }
+﻿namespace boardgame {
+    class Position {
 
-        public Position(int row, int column)
-        {
-            Row = row;
-            Column = column;
+        public int row { get; set; }
+        public int column { get; set; }
+
+        public Position(int row, int column) {
+            this.row = row;
+            this.column = column;
         }
 
-        public override string ToString()
-        {
-            return "Row: " + Row
-                   + "\nColumn: " + Column;
+        public void SetValues(int row, int column) {
+            this.row = row;
+            this.column = column;
+        }
+
+        public override string ToString() {
+            return row
+                + ", "
+                + column;
         }
     }
 }

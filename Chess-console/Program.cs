@@ -1,35 +1,41 @@
-﻿using Chess_console;
+﻿using System;
 using boardgame;
 using chess;
 
-internal class Program
-{
-    private static void Main(string[] args)
-    {
-        try
-        {
-            ChessMatch match = new ChessMatch();
-            while (!match.finished)
-            {
+namespace Chess_console {
+    class Program {
+        static void Main(string[] args) {
 
-                Console.Clear();
-                Screen.PrintBoard(match.board);
+            try {
+                ChessMatch partida = new ChessMatch();
 
-                Console.WriteLine();
-                Console.Write("Origin:");
-                Position origin = Screen.ReadChessPosition().ToPosition();
+                while (!partida.finished) {
 
-                Console.Write("Destiny: ");
-                Position destiny = Screen.ReadChessPosition().ToPosition();
+                    Console.Clear();
+                    Screen.PrintBoard(partida.bd);
 
-                match.Performsmovement(origin, destiny);
+                    Console.WriteLine();
+                    Console.Write("Origem: ");
+                    Position origin = Screen.ReadChessPosition().toPosition();
+
+                    bool[,] posicoesPossiveis = partida.bd.piece(origin).PossibleMoves();
+
+                    Console.Clear();
+                    Screen.PrintBoard(partida.bd, posicoesPossiveis);
+
+                    Console.WriteLine();
+                    Console.Write("Destino: ");
+                    Position destiny = Screen.ReadChessPosition().toPosition();
+
+                    partida.PerformMovements(origin, destiny);
+                }
+
+            }
+            catch (BoardException e) {
+                Console.WriteLine(e.Message);
             }
 
-
-        }
-        catch (BoardException e)
-        {
-            Console.WriteLine("Board Error " + e.Message);
+            Console.ReadLine();
         }
     }
 }

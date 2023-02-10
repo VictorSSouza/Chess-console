@@ -1,10 +1,9 @@
 ﻿using System;
-namespace boardgame
-{
-    internal class BoardException : Exception
-    {
-        public BoardException(string message) : base(message) 
-        { 
+
+namespace boardgame {
+    class BoardException : Exception {
+
+        public BoardException(string msg) : base(msg) {
         }
     }
 }

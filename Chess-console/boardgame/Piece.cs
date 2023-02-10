@@ -1,24 +1,22 @@
-﻿using System;
+﻿namespace boardgame {
+    abstract class Piece {
 
-namespace boardgame
-{
-    internal class Piece
-    {
         public Position position { get; set; }
         public Color color { get; protected set; }
-        public int QtyMoves { get; protected set; }
-        public Board board { get; protected set; }
-
-        public Piece(Board board, Color color)
-        {
+        public int qtyMoviments { get; protected set; }
+        public Board bd { get; protected set; }
+         
+        public Piece(Board bd, Color color) {
             this.position = null;
+            this.bd = bd;
             this.color = color;
-            this.board = board;
-            this.QtyMoves = 0;
+            this.qtyMoviments = 0;
         }
-        public void IncrementQtyMovements()
-        {
-            QtyMoves++;
+
+        public void addQtyMoviments() {
+            qtyMoviments++;
         }
+
+        public abstract bool[,] PossibleMoves();
     }
 }

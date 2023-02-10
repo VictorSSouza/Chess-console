@@ -1,23 +1,22 @@
-﻿using System;
-using boardgame;
-namespace chess
-{
-    internal class ChessPosition
-    {
-        public int row { get; set; }
+﻿using boardgame;
+
+namespace chess {
+    class ChessPosition {
+
         public char column { get; set; }
-        public ChessPosition(char column, int row)
-        {
-            this.row = row;
+        public int row { get; set; }
+
+        public ChessPosition(char column, int row) {
             this.column = column;
+            this.row = row;
         }
-        public Position ToPosition()
-        {
+
+        public Position toPosition() {
             return new Position(8 - row, column - 'a');
         }
-        public override string ToString()
-        {
-            return ""+column+row;
+
+        public override string ToString() {
+            return "" + column + row;
         }
     }
 }
