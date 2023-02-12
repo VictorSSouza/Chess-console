@@ -7,34 +7,47 @@ namespace Chess_console {
         static void Main(string[] args) {
 
             try {
-                ChessMatch partida = new ChessMatch();
+                ChessMatch match = new ChessMatch();
 
-                while (!partida.finished) {
+                while (!match.Finished) {
 
-                    Console.Clear();
-                    Screen.PrintBoard(partida.bd);
+                    try
+                    {
+                        Console.Clear();
+                        Screen.PrintBoard(match.Bd);
 
-                    Console.WriteLine();
-                    Console.Write("Origem: ");
-                    Position origin = Screen.ReadChessPosition().toPosition();
+                        Console.WriteLine();
+                        Console.WriteLine("Turno: " + match.Turn);
+                        Console.WriteLine("Vez do Jogador (Cor): " + match.CurrentPlayer);
 
-                    bool[,] posicoesPossiveis = partida.bd.piece(origin).PossibleMoves();
+                        Console.WriteLine();
+                        Console.Write("Origem: ");
+                        Position origin = Screen.ReadChessPosition().toPosition();
+                        match.ValidateOriginPosition(origin);
 
-                    Console.Clear();
-                    Screen.PrintBoard(partida.bd, posicoesPossiveis);
+                        bool[,] possibleMoves = match.Bd.piece(origin).PossibleMoves();
 
-                    Console.WriteLine();
-                    Console.Write("Destino: ");
-                    Position destiny = Screen.ReadChessPosition().toPosition();
+                        Console.Clear();
+                        Screen.PrintBoard(match.Bd, possibleMoves);
 
-                    partida.PerformMovements(origin, destiny);
+                        Console.WriteLine();
+                        Console.Write("Destino: ");
+                        Position destiny = Screen.ReadChessPosition().toPosition();
+                        match.ValidateDestinyPosition(origin, destiny);
+
+                        match.MakeMove(origin, destiny);
+                    } 
+                    catch (BoardException e) 
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.ReadLine();
+                    }
                 }
 
             }
             catch (BoardException e) {
                 Console.WriteLine(e.Message);
             }
-
             Console.ReadLine();
         }
     }

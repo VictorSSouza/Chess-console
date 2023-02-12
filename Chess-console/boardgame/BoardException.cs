@@ -3,7 +3,7 @@
 namespace boardgame {
     class BoardException : Exception {
 
-        public BoardException(string msg) : base(msg) {
+        public BoardException(string message) : base(message) {
         }
     }
 }
