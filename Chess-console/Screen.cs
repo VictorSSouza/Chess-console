@@ -13,10 +13,18 @@ namespace Chess_console {
             PrintCapturedPieces(match);
             Console.WriteLine();
             Console.WriteLine("Turno: " + match.Turn);
-            Console.WriteLine("Vez do Jogador (Cor): " + match.CurrentPlayer);
-            if (match.Xeque)
+            if (!match.Finished)
             {
-                Console.WriteLine("XEQUE!");
+                Console.WriteLine("Vez do Jogador (Cor): " + match.CurrentPlayer);
+                if (match.Xeque)
+                {
+                    Console.WriteLine("XEQUE!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("XEQUE-MATE!");
+                Console.WriteLine("Vencedor: "+ match.CurrentPlayer);
             }
         }
         public static void PrintCapturedPieces(ChessMatch match)
