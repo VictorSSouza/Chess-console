@@ -14,11 +14,7 @@ namespace Chess_console {
                     try
                     {
                         Console.Clear();
-                        Screen.PrintBoard(match.Bd);
-
-                        Console.WriteLine();
-                        Console.WriteLine("Turno: " + match.Turn);
-                        Console.WriteLine("Vez do Jogador (Cor): " + match.CurrentPlayer);
+                        Screen.PrintMatch(match);
 
                         Console.WriteLine();
                         Console.Write("Origem: ");

@@ -16,6 +16,10 @@
         public void addQtyMoviments() {
             qtyMoviments++;
         }
+        public void removeQtyMoviments()
+        {
+            qtyMoviments--;
+        }
 
         public bool PossibleMovesExists()
         {

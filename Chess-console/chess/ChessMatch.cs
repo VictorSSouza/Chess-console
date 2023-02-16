@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters;
 using boardgame;
 
 namespace chess {
@@ -8,25 +9,60 @@ namespace chess {
         public int Turn { get; private set; }
         public Color CurrentPlayer { get; private set; }
         public bool Finished { get; private set; }
-
+        private HashSet<Piece> pieces;
+        private HashSet<Piece> captured;
+        public bool Xeque { get; private set; }
         public ChessMatch() {
             Bd = new Board(8, 8);
             Turn = 1;
             CurrentPlayer = Color.Branca;
             Finished = false;
+            pieces = new HashSet<Piece>();
+            captured = new HashSet<Piece>();
+            Xeque = false;
             PutPieces();
         }
 
-        public void PerformMovements(Position origin, Position destiny) {
+        public Piece PerformMovement(Position origin, Position destiny) {
             Piece p = Bd.removePiece(origin);
             p.addQtyMoviments();
             Piece capturedPiece = Bd.removePiece(destiny);
             Bd.PutPiece(p, destiny);
+            if(capturedPiece != null )
+            {
+                captured.Add(capturedPiece);
+            }
+            return capturedPiece;
         }
 
+        public void UndoMovement(Position origin, Position destiny, Piece capturedPiece)
+        {
+            Piece p = Bd.removePiece(destiny);
+            p.removeQtyMoviments();
+            if(capturedPiece != null)
+            {
+                Bd.PutPiece(capturedPiece, destiny);
+                captured.Remove(capturedPiece);
+            }
+            Bd.PutPiece(p, origin);
+
+        }
         public void MakeMove(Position origin, Position destiny)
         {
-            PerformMovements(origin, destiny);
+            Piece capturedPiece = PerformMovement(origin, destiny);
+            if (IsInCheck(CurrentPlayer))
+            {
+                UndoMovement(origin, destiny, capturedPiece);
+                throw new BoardException("Você não pode se colocar em xeque!");
+            }
+            if (IsInCheck(Opponent(CurrentPlayer)))
+            {
+                Xeque = true;
+            }
+            else
+            {
+                Xeque = false;
+            }
             Turn++;
             ChangePlayer();
         }
@@ -63,20 +99,89 @@ namespace chess {
                 throw new BoardException("A posição de destino escolhida é inválida!");
             }
         }
-        private void PutPieces() {
-            Bd.PutPiece(new Tower(Bd, Color.Branca), new ChessPosition('c', 1).toPosition());
-            Bd.PutPiece(new Tower(Bd, Color.Branca), new ChessPosition('c', 2).toPosition());
-            Bd.PutPiece(new Tower(Bd, Color.Branca), new ChessPosition('d', 2).toPosition());
-            Bd.PutPiece(new Tower(Bd, Color.Branca), new ChessPosition('e', 2).toPosition());
-            Bd.PutPiece(new Tower(Bd, Color.Branca), new ChessPosition('e', 1).toPosition());
-            Bd.PutPiece(new King(Bd, Color.Branca), new ChessPosition('d', 1).toPosition());
 
-            Bd.PutPiece(new Tower(Bd, Color.Preta), new ChessPosition('c', 7).toPosition());
-            Bd.PutPiece(new Tower(Bd, Color.Preta), new ChessPosition('c', 8).toPosition());
-            Bd.PutPiece(new Tower(Bd, Color.Preta), new ChessPosition('d', 7).toPosition());
-            Bd.PutPiece(new Tower(Bd, Color.Preta), new ChessPosition('e', 7).toPosition());
-            Bd.PutPiece(new Tower(Bd, Color.Preta), new ChessPosition('e', 8).toPosition());
-            Bd.PutPiece(new King(Bd, Color.Preta), new ChessPosition('d', 8).toPosition());
+        public HashSet<Piece> CapturedPieces(Color color)
+        {
+            HashSet<Piece> aux = new HashSet<Piece>();
+            foreach(Piece x in captured)
+            {
+                if(x.color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+            return aux;
+        }
+        public HashSet<Piece> InGamePieces(Color color)
+        {
+            HashSet<Piece> aux = new HashSet<Piece>();
+            foreach (Piece x in pieces)
+            {
+                if (x.color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+            aux.ExceptWith(CapturedPieces(color));
+            return aux;
+        }
+        private Color Opponent(Color color)
+        {
+            if(color == Color.Branca)
+            {
+                return Color.Preta;
+            }
+            else
+            {
+                return Color.Branca;
+            }
+        }
+        private Piece king(Color color)
+        {
+            foreach(Piece x in InGamePieces(color))
+            {
+                if(x is King)
+                {
+                    return x;
+                }
+            }
+            return null;
+        }
+
+        public bool IsInCheck(Color color)
+        {
+            Piece k = king(color);
+            if(k == null)
+            {
+                throw new BoardException($"Não tem Rei da cor {color} no tabuleiro!");
+            }
+            foreach(Piece x in InGamePieces(Opponent(color)))
+            {
+                bool[,] mat = x.PossibleMoves();
+                if (mat[k.position.row, k.position.column])
+                    return true;
+            }
+            return false;
+        }
+        public void PutNewPieces(char column, int row, Piece piece)
+        {
+            Bd.PutPiece(piece,new ChessPosition(column, row).toPosition());
+            pieces.Add(piece);
+        }
+        private void PutPieces() {
+            PutNewPieces('c', 1, new Tower(Bd, Color.Branca));
+            PutNewPieces('c', 2, new Tower(Bd, Color.Branca));
+            PutNewPieces('d', 2, new Tower(Bd, Color.Branca));
+            PutNewPieces('e', 2, new Tower(Bd, Color.Branca));
+            PutNewPieces('e', 1, new Tower(Bd, Color.Branca));
+            PutNewPieces('d', 1, new King(Bd, Color.Branca));
+
+            PutNewPieces('c', 7, new Tower(Bd, Color.Preta));
+            PutNewPieces('c', 8, new Tower(Bd, Color.Preta));
+            PutNewPieces('d', 7, new Tower(Bd, Color.Preta));
+            PutNewPieces('e', 7, new Tower(Bd, Color.Preta));
+            PutNewPieces('e', 8, new Tower(Bd, Color.Preta));
+            PutNewPieces('d', 8, new King(Bd, Color.Preta));
         }
     }
 }
