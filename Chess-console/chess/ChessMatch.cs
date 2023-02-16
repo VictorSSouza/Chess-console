@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters;
 using boardgame;
 
 namespace chess {
@@ -53,7 +52,7 @@ namespace chess {
             if (IsInCheck(CurrentPlayer))
             {
                 UndoMovement(origin, destiny, capturedPiece);
-                throw new BoardException("Você não pode se colocar em xeque!");
+                throw new BoardException("Você não pode se colocar em XEQUE!");
             }
             if (IsInCheck(Opponent(CurrentPlayer)))
             {
@@ -101,7 +100,7 @@ namespace chess {
         }
         public void ValidateDestinyPosition(Position origin, Position destiny)
         {
-            if (!Bd.piece(origin).CanMoveTo(destiny))
+            if (!Bd.piece(origin).PossibleMove(destiny))
             {
                 throw new BoardException("A posição de destino escolhida é inválida!");
             }
@@ -112,10 +111,8 @@ namespace chess {
             HashSet<Piece> aux = new HashSet<Piece>();
             foreach(Piece x in captured)
             {
-                if(x.color == color)
-                {
+                if (x.color == color)
                     aux.Add(x);
-                }
             }
             return aux;
         }
@@ -125,9 +122,7 @@ namespace chess {
             foreach (Piece x in pieces)
             {
                 if (x.color == color)
-                {
                     aux.Add(x);
-                }
             }
             aux.ExceptWith(CapturedPieces(color));
             return aux;
