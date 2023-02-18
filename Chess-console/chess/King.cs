@@ -25,7 +25,7 @@ namespace chess {
             if (Bd.ValidPosition(pos) && CanMove(pos)) {
                 mat[pos.row, pos.column] = true;
             }
-            // ne
+            // nordeste
             pos.SetValues(position.row - 1, position.column + 1);
             if (Bd.ValidPosition(pos) && CanMove(pos)) {
                 mat[pos.row, pos.column] = true;
@@ -35,7 +35,7 @@ namespace chess {
             if (Bd.ValidPosition(pos) && CanMove(pos)) {
                 mat[pos.row, pos.column] = true;
             }
-            // se
+            // sudeste
             pos.SetValues(position.row + 1, position.column + 1);
             if (Bd.ValidPosition(pos) && CanMove(pos)) {
                 mat[pos.row, pos.column] = true;
@@ -45,7 +45,7 @@ namespace chess {
             if (Bd.ValidPosition(pos) && CanMove(pos)) {
                 mat[pos.row, pos.column] = true;
             }
-            // so
+            // sudoeste
             pos.SetValues(position.row + 1, position.column - 1);
             if (Bd.ValidPosition(pos) && CanMove(pos)) {
                 mat[pos.row, pos.column] = true;
@@ -55,7 +55,7 @@ namespace chess {
             if (Bd.ValidPosition(pos) && CanMove(pos)) {
                 mat[pos.row, pos.column] = true;
             }
-            // no
+            // noroeste
             pos.SetValues(position.row - 1, position.column - 1);
             if (Bd.ValidPosition(pos) && CanMove(pos)) {
                 mat[pos.row, pos.column] = true;

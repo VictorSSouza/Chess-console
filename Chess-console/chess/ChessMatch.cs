@@ -198,12 +198,42 @@ namespace chess {
             pieces.Add(piece);
         }
         private void PutPieces() {
-            PutNewPieces('c', 1, new Tower(Bd, Color.Branca));
-            PutNewPieces('d', 1, new King(Bd, Color.Branca));
-            PutNewPieces('h', 7, new Tower(Bd, Color.Branca));
-
-            PutNewPieces('a', 8, new King(Bd, Color.Preta));
-            PutNewPieces('b', 8, new Tower(Bd, Color.Preta));
+            // Primeira Fileira Branca
+            PutNewPieces('a', 1, new Tower(Bd, Color.Branca));
+            PutNewPieces('b', 1, new Horse(Bd, Color.Branca));
+            PutNewPieces('c', 1, new Bishop(Bd, Color.Branca));
+            PutNewPieces('d', 1, new Queen(Bd, Color.Branca));
+            PutNewPieces('e', 1, new King(Bd, Color.Branca));
+            PutNewPieces('f', 1, new Bishop(Bd, Color.Branca));
+            PutNewPieces('g', 1, new Horse(Bd, Color.Branca));
+            PutNewPieces('h', 1, new Tower(Bd, Color.Branca));
+            // Segunda Fileira Branca
+            PutNewPieces('a', 2, new Pawn(Bd, Color.Branca));
+            PutNewPieces('b', 2, new Pawn(Bd, Color.Branca));
+            PutNewPieces('c', 2, new Pawn(Bd, Color.Branca));
+            PutNewPieces('d', 2, new Pawn(Bd, Color.Branca));
+            PutNewPieces('e', 2, new Pawn(Bd, Color.Branca));
+            PutNewPieces('f', 2, new Pawn(Bd, Color.Branca));
+            PutNewPieces('g', 2, new Pawn(Bd, Color.Branca));
+            PutNewPieces('h', 2, new Pawn(Bd, Color.Branca));
+            // Primeira Fileira Preta
+            PutNewPieces('a', 8, new Tower(Bd, Color.Preta));
+            PutNewPieces('b', 8, new Horse(Bd, Color.Preta));
+            PutNewPieces('c', 8, new Bishop(Bd, Color.Preta));
+            PutNewPieces('d', 8, new Queen(Bd, Color.Preta));
+            PutNewPieces('e', 8, new King(Bd, Color.Preta));
+            PutNewPieces('f', 8, new Bishop(Bd, Color.Preta));
+            PutNewPieces('g', 8, new Horse(Bd, Color.Preta));
+            PutNewPieces('h', 8, new Tower(Bd, Color.Preta));
+            // Segunda Fileira Preta
+            PutNewPieces('a', 7, new Pawn(Bd, Color.Preta));
+            PutNewPieces('b', 7, new Pawn(Bd, Color.Preta));
+            PutNewPieces('c', 7, new Pawn(Bd, Color.Preta));
+            PutNewPieces('d', 7, new Pawn(Bd, Color.Preta));
+            PutNewPieces('e', 7, new Pawn(Bd, Color.Preta));
+            PutNewPieces('f', 7, new Pawn(Bd, Color.Preta));
+            PutNewPieces('g', 7, new Pawn(Bd, Color.Preta));
+            PutNewPieces('h', 7, new Pawn(Bd, Color.Preta));
         }
     }
 }
