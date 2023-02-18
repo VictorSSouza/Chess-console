@@ -16,7 +16,7 @@ namespace Chess_console {
             if (!match.Finished)
             {
                 Console.WriteLine("Vez do Jogador (Cor): " + match.CurrentPlayer);
-                if (match.Xeque)
+                if (match.Check)
                 {
                     Console.WriteLine("XEQUE!");
                 }
