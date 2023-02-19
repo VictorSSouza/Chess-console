@@ -11,6 +11,7 @@ namespace chess {
         private HashSet<Piece> pieces;
         private HashSet<Piece> captured;
         public bool Check { get; private set; }
+        public Piece EnPassantVulnerable { get; private set; }
         public ChessMatch() {
             Bd = new Board(8, 8);
             Turn = 1;
@@ -18,7 +19,8 @@ namespace chess {
             Finished = false;
             pieces = new HashSet<Piece>();
             captured = new HashSet<Piece>();
-            Check = false;
+            EnPassantVulnerable = null;
+            Check = false;           
             PutPieces();
         }
 
@@ -49,6 +51,25 @@ namespace chess {
                 Piece T = Bd.removePiece(originT);
                 T.addQtyMoviments();
                 Bd.PutPiece(T, destinyT);
+            }
+
+            // :)jogadaEspecial EnPassant
+            if(p is Pawn)
+            {
+                if(origin.column != destiny.column && capturedPiece == null)
+                {
+                    Position posP;
+                    if(p.color == Color.Branca)
+                    {
+                        posP = new Position(destiny.row + 1, destiny.column);
+                    }
+                    else
+                    {
+                        posP = new Position(destiny.row - 1, destiny.column);
+                    }
+                    capturedPiece = Bd.removePiece(posP);
+                    captured.Add(capturedPiece);
+                }
             }
 
             return capturedPiece;
@@ -83,6 +104,25 @@ namespace chess {
                 T.removeQtyMoviments();
                 Bd.PutPiece(T, originT);
             }
+
+            // :)jogadaEspecial EnPassant
+            if(p is Pawn)
+            {
+                if(origin.column != destiny.column && capturedPiece == EnPassantVulnerable)
+                {
+                    Piece pawn = Bd.removePiece(destiny);
+                    Position posP;
+                    if(p.color == Color.Branca)
+                    {
+                        posP = new Position(3, destiny.column);
+                    }
+                    else
+                    {
+                        posP = new Position(4, destiny.column);
+                    }
+                    Bd.PutPiece(pawn,posP);
+                }
+            }
         }
         public void MakeMove(Position origin, Position destiny)
         {
@@ -108,6 +148,17 @@ namespace chess {
             {
                 Turn++;
                 ChangePlayer();
+            }
+
+            Piece p = Bd.piece(destiny);
+            // :)jogadaEspecial EnPassant
+            if(p is Pawn && (destiny.row == origin.row - 2 || destiny.row == origin.row + 2))
+            {
+                EnPassantVulnerable = p;
+            }
+            else
+            {
+                EnPassantVulnerable = null;
             }
         }
         private void ChangePlayer()
@@ -246,14 +297,14 @@ namespace chess {
             PutNewPieces('g', 1, new Horse(Bd, Color.Branca));
             PutNewPieces('h', 1, new Tower(Bd, Color.Branca));
             // Segunda Fileira Branca
-            PutNewPieces('a', 2, new Pawn(Bd, Color.Branca));
-            PutNewPieces('b', 2, new Pawn(Bd, Color.Branca));
-            PutNewPieces('c', 2, new Pawn(Bd, Color.Branca));
-            PutNewPieces('d', 2, new Pawn(Bd, Color.Branca));
-            PutNewPieces('e', 2, new Pawn(Bd, Color.Branca));
-            PutNewPieces('f', 2, new Pawn(Bd, Color.Branca));
-            PutNewPieces('g', 2, new Pawn(Bd, Color.Branca));
-            PutNewPieces('h', 2, new Pawn(Bd, Color.Branca));
+            PutNewPieces('a', 2, new Pawn(Bd, Color.Branca, this));
+            PutNewPieces('b', 2, new Pawn(Bd, Color.Branca, this));
+            PutNewPieces('c', 2, new Pawn(Bd, Color.Branca, this));
+            PutNewPieces('d', 2, new Pawn(Bd, Color.Branca, this));
+            PutNewPieces('e', 2, new Pawn(Bd, Color.Branca, this));
+            PutNewPieces('f', 2, new Pawn(Bd, Color.Branca, this));
+            PutNewPieces('g', 2, new Pawn(Bd, Color.Branca, this));
+            PutNewPieces('h', 2, new Pawn(Bd, Color.Branca, this));
             // Primeira Fileira Preta
             PutNewPieces('a', 8, new Tower(Bd, Color.Preta));
             PutNewPieces('b', 8, new Horse(Bd, Color.Preta));
@@ -264,14 +315,14 @@ namespace chess {
             PutNewPieces('g', 8, new Horse(Bd, Color.Preta));
             PutNewPieces('h', 8, new Tower(Bd, Color.Preta));
             // Segunda Fileira Preta
-            PutNewPieces('a', 7, new Pawn(Bd, Color.Preta));
-            PutNewPieces('b', 7, new Pawn(Bd, Color.Preta));
-            PutNewPieces('c', 7, new Pawn(Bd, Color.Preta));
-            PutNewPieces('d', 7, new Pawn(Bd, Color.Preta));
-            PutNewPieces('e', 7, new Pawn(Bd, Color.Preta));
-            PutNewPieces('f', 7, new Pawn(Bd, Color.Preta));
-            PutNewPieces('g', 7, new Pawn(Bd, Color.Preta));
-            PutNewPieces('h', 7, new Pawn(Bd, Color.Preta));
+            PutNewPieces('a', 7, new Pawn(Bd, Color.Preta, this));
+            PutNewPieces('b', 7, new Pawn(Bd, Color.Preta, this));
+            PutNewPieces('c', 7, new Pawn(Bd, Color.Preta, this));
+            PutNewPieces('d', 7, new Pawn(Bd, Color.Preta, this));
+            PutNewPieces('e', 7, new Pawn(Bd, Color.Preta, this));
+            PutNewPieces('f', 7, new Pawn(Bd, Color.Preta, this));
+            PutNewPieces('g', 7, new Pawn(Bd, Color.Preta, this));
+            PutNewPieces('h', 7, new Pawn(Bd, Color.Preta, this));
         }
     }
 }

@@ -68,7 +68,7 @@ namespace chess {
                 mat[pos.row, pos.column] = true;
             }
 
-            // :) jogada especial Roque
+            // :)jogadaEspecial Roque
             if(qtyMoviments == 0 && !match.Check)
             {
                 // :)jogadaEspecial Roque pequeno

@@ -4,7 +4,11 @@ namespace chess
 {
     internal class Pawn : Piece
     {
-        public Pawn(Board bd, Color color) : base(bd, color) { }
+        private ChessMatch match; 
+        public Pawn(Board bd, Color color, ChessMatch match) : base(bd, color) 
+        {
+            this.match = match;
+        }
         public override string ToString()
         {
             return "P";
@@ -54,6 +58,23 @@ namespace chess
                 {
                     mat[pos.row, pos.column] = true;
                 }
+
+                // :)jogadaEspecial EnPassant
+                if(position.row == 3)
+                {
+                    // esquerda acima
+                    Position left = new Position(position.row, position.column - 1);
+                    if(Bd.ValidPosition(left) && OpponentExist(left) && Bd.piece(left) == match.EnPassantVulnerable)
+                    {
+                        mat[left.row - 1, left.column] = true;
+                    }
+                    // direita acima
+                    Position right = new Position(position.row, position.column + 1);
+                    if (Bd.ValidPosition(right) && OpponentExist(right) && Bd.piece(right) == match.EnPassantVulnerable)
+                    {
+                        mat[right.row - 1, right.column] = true;
+                    }
+                }
             }
             else
             {
@@ -84,6 +105,23 @@ namespace chess
                 if (Bd.ValidPosition(pos) && OpponentExist(pos))
                 {
                     mat[pos.row, pos.column] = true;
+                }
+
+                // :)jogadaEspecial EnPassant
+                if (position.row == 4)
+                {
+                    // esquerda abaixo
+                    Position left = new Position(position.row, position.column - 1);
+                    if (Bd.ValidPosition(left) && OpponentExist(left) && Bd.piece(left) == match.EnPassantVulnerable)
+                    {
+                        mat[left.row + 1, left.column] = true;
+                    }
+                    // direita abaixo
+                    Position right = new Position(position.row, position.column + 1);
+                    if (Bd.ValidPosition(right) && OpponentExist(right) && Bd.piece(right) == match.EnPassantVulnerable)
+                    {
+                        mat[right.row + 1, right.column] = true;
+                    }
                 }
             }
 
