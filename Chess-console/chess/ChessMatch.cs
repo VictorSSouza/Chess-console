@@ -132,6 +132,22 @@ namespace chess {
                 UndoMovement(origin, destiny, capturedPiece);
                 throw new BoardException("Você não pode se colocar em XEQUE!");
             }
+
+            Piece p = Bd.piece(destiny);
+            // :)jogadaEspecial promocao
+            if(p is Pawn)
+            {
+                if((p.color == Color.Branca && destiny.row == 0) || (p.color == Color.Preta && destiny.row == 7))
+                {
+                    p = Bd.removePiece(destiny);
+                    pieces.Remove(p);
+
+                    Piece promotion = new Queen(Bd, p.color);
+                    Bd.PutPiece(promotion, destiny);
+                    pieces.Add(promotion);
+                }
+            }
+
             if (IsInCheck(Opponent(CurrentPlayer)))
             {
                 Check = true;
@@ -149,8 +165,7 @@ namespace chess {
                 Turn++;
                 ChangePlayer();
             }
-
-            Piece p = Bd.piece(destiny);
+          
             // :)jogadaEspecial EnPassant
             if(p is Pawn && (destiny.row == origin.row - 2 || destiny.row == origin.row + 2))
             {
