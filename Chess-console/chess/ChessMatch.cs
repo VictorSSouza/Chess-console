@@ -1,71 +1,73 @@
 ﻿using System.Collections.Generic;
 using boardgame;
 
-namespace chess {
-    class ChessMatch {
-
-        public Board Bd { get; private set; }
-        public int Turn { get; private set; }
-        public Color CurrentPlayer { get; private set; }
-        public bool Finished { get; private set; }
-        private HashSet<Piece> pieces;
-        private HashSet<Piece> captured;
-        public bool Check { get; private set; }
-        public Piece EnPassantVulnerable { get; private set; }
+namespace chess 
+{
+    class ChessMatch 
+    {
+        // Classe 'Partida de Xadrez'
+        public Board Bd { get; private set; } // tabuleiro
+        public int Turn { get; private set; } // turno da partida
+        public Color CurrentPlayer { get; private set; } // jogador atual e cor da peca
+        public bool Finished { get; private set; } // fim da partida
+        private HashSet<Piece> pieces; // conjunto de pecas em jogo
+        private HashSet<Piece> captured; // conjunto de pecas capturadas
+        public bool Check { get; private set; } // xeque 
+        public Piece EnPassantVulnerable { get; private set; } // vuneravel a :)jogadaEspecial En Passant
         public ChessMatch() {
-            Bd = new Board(8, 8);
-            Turn = 1;
-            CurrentPlayer = Color.Branca;
+            Bd = new Board(8, 8); // xadrez e um array(matriz) com 8 linhas e 8 colunas
+            Turn = 1; // primeiro turno para movimentar uma peca
+            CurrentPlayer = Color.Branca; // inicia a partida pela peca branca
             Finished = false;
-            pieces = new HashSet<Piece>();
-            captured = new HashSet<Piece>();
+            pieces = new HashSet<Piece>(); // todas as pecas inicialmente estao no tabuleiro
+            captured = new HashSet<Piece>(); // esse conjunto inicia vazio
             EnPassantVulnerable = null;
             Check = false;           
-            PutPieces();
+            PutPieces(); // colocar pecas no tabuleiro
         }
 
         public Piece PerformMovement(Position origin, Position destiny) {
-            Piece p = Bd.removePiece(origin);
-            p.addQtyMoviments();
-            Piece capturedPiece = Bd.removePiece(destiny);
-            Bd.PutPiece(p, destiny);
-            if(capturedPiece != null )
+            Piece p = Bd.removePiece(origin); // remover peca da posicao de origem
+            p.addQtyMoviments(); // incrementar movimentos de p
+            Piece capturedPiece = Bd.removePiece(destiny); // variavel local recebe peca ou vazio da posicao destino
+            Bd.PutPiece(p, destiny); // colocar p na posicao destino
+            if(capturedPiece != null ) // se a peca tiver valor diferente de vazio
             {
-                captured.Add(capturedPiece);
+                captured.Add(capturedPiece); // adiciona ao conjuntos de pecas capturadas
             }
 
             // :)jogadaEspecial roque pequeno
-            if(p is King && destiny.column == origin.column + 2)
+            if(p is King && destiny.column == origin.column + 2) // onde o rei vai ficar é origin.column + 2
             {
-                Position originT = new Position(origin.row, origin.column + 3);
-                Position destinyT = new Position(origin.row, origin.column + 1);
-                Piece T = Bd.removePiece(originT);
-                T.addQtyMoviments();
-                Bd.PutPiece(T, destinyT);
+                Position originT = new Position(origin.row, origin.column + 3); // posicao de origem da peca torre na coluna h
+                Position destinyT = new Position(origin.row, origin.column + 1); // posicao de destino da peca torre na coluna f
+                Piece T = Bd.removePiece(originT); // remove da origem
+                T.addQtyMoviments(); // incrementa o movimento
+                Bd.PutPiece(T, destinyT); // coloca no destino
             }
             // :)jogadaEspecial roque grande
-            if (p is King && destiny.column == origin.column - 2)
+            if (p is King && destiny.column == origin.column - 2) // onde o rei vai ficar é origin.column + 2
             {
-                Position originT = new Position(origin.row, origin.column - 4);
-                Position destinyT = new Position(origin.row, origin.column - 1);
-                Piece T = Bd.removePiece(originT);
-                T.addQtyMoviments();
-                Bd.PutPiece(T, destinyT);
+                Position originT = new Position(origin.row, origin.column - 4); // posicao de origem da peca torre na coluna a
+                Position destinyT = new Position(origin.row, origin.column - 1); // posicao de destino da peca torre na coluna c
+                Piece T = Bd.removePiece(originT); // remove da origem
+                T.addQtyMoviments(); // incrementa o movimento
+                Bd.PutPiece(T, destinyT); // coloca no destino
             }
 
             // :)jogadaEspecial EnPassant
             if(p is Pawn)
             {
-                if(origin.column != destiny.column && capturedPiece == null)
+                if(origin.column != destiny.column && capturedPiece == null) // Aqui é para colocar na posicao linha adequada da jogadaEspecial
                 {
                     Position posP;
                     if(p.color == Color.Branca)
                     {
-                        posP = new Position(destiny.row + 1, destiny.column);
+                        posP = new Position(destiny.row + 1, destiny.column); // fica acima do oponente
                     }
                     else
                     {
-                        posP = new Position(destiny.row - 1, destiny.column);
+                        posP = new Position(destiny.row - 1, destiny.column); // fica abaixo do oponente
                     }
                     capturedPiece = Bd.removePiece(posP);
                     captured.Add(capturedPiece);
@@ -75,25 +77,25 @@ namespace chess {
             return capturedPiece;
         }
 
-        public void UndoMovement(Position origin, Position destiny, Piece capturedPiece)
+        public void UndoMovement(Position origin, Position destiny, Piece capturedPiece) // metodo que desfaz movimento
         {
-            Piece p = Bd.removePiece(destiny);
-            p.removeQtyMoviments();
+            Piece p = Bd.removePiece(destiny); // remove a peca do destino
+            p.removeQtyMoviments(); // retira o movimento
             if(capturedPiece != null)
             {
                 Bd.PutPiece(capturedPiece, destiny);
-                captured.Remove(capturedPiece);
+                captured.Remove(capturedPiece); // retirar do conjunto das pecas capturadas
             }
-            Bd.PutPiece(p, origin);
+            Bd.PutPiece(p, origin); // colocar p na posicao de origem
 
             // :)jogadaEspecial roque pequeno
             if (p is King && destiny.column == origin.column + 2)
             {
                 Position originT = new Position(origin.row, origin.column + 3);
                 Position destinyT = new Position(origin.row, origin.column + 1);
-                Piece T = Bd.removePiece(destinyT);
-                T.removeQtyMoviments();
-                Bd.PutPiece(T, originT);
+                Piece T = Bd.removePiece(destinyT); // remove a peca da torre da posicao destino
+                T.removeQtyMoviments(); // decrementa a quantidade de movimentos
+                Bd.PutPiece(T, originT); // coloca na origem
             }
             // :)jogadaEspecial roque grande
             if (p is King && destiny.column == origin.column - 2)
@@ -108,7 +110,7 @@ namespace chess {
             // :)jogadaEspecial EnPassant
             if(p is Pawn)
             {
-                if(origin.column != destiny.column && capturedPiece == EnPassantVulnerable)
+                if(origin.column != destiny.column && capturedPiece == EnPassantVulnerable) // retorna a peca as suas devidas posicoes antes da jogadaEspecial
                 {
                     Piece pawn = Bd.removePiece(destiny);
                     Position posP;
@@ -124,31 +126,31 @@ namespace chess {
                 }
             }
         }
-        public void MakeMove(Position origin, Position destiny)
+        public void MakeMove(Position origin, Position destiny) // realiza a jogada
         {
-            Piece capturedPiece = PerformMovement(origin, destiny);
-            if (IsInCheck(CurrentPlayer))
+            Piece capturedPiece = PerformMovement(origin, destiny); // executa o movimento
+            if (IsInCheck(CurrentPlayer)) // se o jogador atual esta em xeque
             {
-                UndoMovement(origin, destiny, capturedPiece);
+                UndoMovement(origin, destiny, capturedPiece); // desfaz movimento
                 throw new BoardException("Você não pode se colocar em XEQUE!");
             }
 
             Piece p = Bd.piece(destiny);
-            // :)jogadaEspecial promocao
+            // :)jogadaEspecial promocao/promotion
             if(p is Pawn)
             {
-                if((p.color == Color.Branca && destiny.row == 0) || (p.color == Color.Preta && destiny.row == 7))
+                if((p.color == Color.Branca && destiny.row == 0) || (p.color == Color.Preta && destiny.row == 7)) // se o peao chega a ultima linha possivel
                 {
                     p = Bd.removePiece(destiny);
-                    pieces.Remove(p);
+                    pieces.Remove(p); // remove o peao
 
                     Piece promotion = new Queen(Bd, p.color);
-                    Bd.PutPiece(promotion, destiny);
-                    pieces.Add(promotion);
+                    Bd.PutPiece(promotion, destiny); // coloca a dama no lugar do peao
+                    pieces.Add(promotion); // adiciona ao conjunto de pecas em jogo
                 }
             }
 
-            if (IsInCheck(Opponent(CurrentPlayer)))
+            if (IsInCheck(Opponent(CurrentPlayer))) // se o oponente esta em xeque
             {
                 Check = true;
             }
@@ -156,18 +158,18 @@ namespace chess {
             {
                 Check = false;
             }
-            if (CheckmateTest(Opponent(CurrentPlayer)))
+            if (CheckmateTest(Opponent(CurrentPlayer))) // se o teste de xeque-mate do oponente e verdade
             {
                 Finished = true;
             }
-            else
+            else // senao continua o turno
             {
                 Turn++;
-                ChangePlayer();
+                ChangePlayer();// troca o jogador
             }
           
             // :)jogadaEspecial EnPassant
-            if(p is Pawn && (destiny.row == origin.row - 2 || destiny.row == origin.row + 2))
+            if(p is Pawn && (destiny.row == origin.row - 2 || destiny.row == origin.row + 2)) // verifica se a peca esta em vuneravel ao enPassant
             {
                 EnPassantVulnerable = p;
             }
@@ -176,7 +178,7 @@ namespace chess {
                 EnPassantVulnerable = null;
             }
         }
-        private void ChangePlayer()
+        private void ChangePlayer() // trocar jogador
         {
             if(CurrentPlayer == Color.Branca)
             {
@@ -187,7 +189,7 @@ namespace chess {
                 CurrentPlayer = Color.Branca;
             }
         }
-        public void ValidateOriginPosition(Position pos)
+        public void ValidateOriginPosition(Position pos) // metodo que valida posicao de origem escolhida
         {
             if (Bd.piece(pos) == null)
             {
@@ -202,7 +204,7 @@ namespace chess {
                 throw new BoardException("Não existe movimentos possiveis para a peça de origem escolhida!");
             }
         }
-        public void ValidateDestinyPosition(Position origin, Position destiny)
+        public void ValidateDestinyPosition(Position origin, Position destiny) // metodo que valida posicao de destino escolhida
         {
             if (!Bd.piece(origin).PossibleMove(destiny))
             {
@@ -210,7 +212,7 @@ namespace chess {
             }
         }
 
-        public HashSet<Piece> CapturedPieces(Color color)
+        public HashSet<Piece> CapturedPieces(Color color) // metodo para armazenar conjunto de pecas capturadas
         {
             HashSet<Piece> aux = new HashSet<Piece>();
             foreach(Piece x in captured)
@@ -220,7 +222,7 @@ namespace chess {
             }
             return aux;
         }
-        public HashSet<Piece> InGamePieces(Color color)
+        public HashSet<Piece> InGamePieces(Color color) // metodo para armazenar conjunto de pecas em jogo
         {
             HashSet<Piece> aux = new HashSet<Piece>();
             foreach (Piece x in pieces)
@@ -231,7 +233,7 @@ namespace chess {
             aux.ExceptWith(CapturedPieces(color));
             return aux;
         }
-        private Color Opponent(Color color)
+        private Color Opponent(Color color) // metodo para definir o oponente dos dois jogadores
         {
             if(color == Color.Branca)
             {
@@ -242,7 +244,7 @@ namespace chess {
                 return Color.Branca;
             }
         }
-        private Piece king(Color color)
+        private Piece king(Color color) // metodo para contar o numero de reis em jogo
         {
             foreach(Piece x in InGamePieces(color))
             {
@@ -254,7 +256,7 @@ namespace chess {
             return null;
         }
 
-        public bool IsInCheck(Color color)
+        public bool IsInCheck(Color color) // metodo para verificar se o rei esta em xeque
         {
             Piece k = king(color);
             if(k == null)
@@ -269,12 +271,12 @@ namespace chess {
             }
             return false;
         }
-        public bool CheckmateTest(Color color)
+        public bool CheckmateTest(Color color) // metodo para testar o xeque-mate 
         {
             if (!IsInCheck(color)) return false;
             foreach(Piece x in InGamePieces(color))
             {
-                bool[,] mat = x.PossibleMoves();
+                bool[,] mat = x.PossibleMoves(); // movimentos possiveis de x
                 for(int i = 0; i < Bd.rows; i++)
                 {
                     for(int j = 0; j < Bd.columns; j++)
@@ -296,12 +298,13 @@ namespace chess {
             }
             return true;
         }
-        public void PutNewPieces(char column, int row, Piece piece)
+        public void PutNewPieces(char column, int row, Piece piece) // metodo que auxilia na hora de colocar novas pecas
         {
             Bd.PutPiece(piece,new ChessPosition(column, row).toPosition());
-            pieces.Add(piece);
+            pieces.Add(piece); // adicionar a peca no tabuleiro
         }
-        private void PutPieces() {
+        private void PutPieces() // colocar todas as pecas de xadrez no tabuleiro
+        {
             // Primeira Fileira Branca
             PutNewPieces('a', 1, new Tower(Bd, Color.Branca));
             PutNewPieces('b', 1, new Horse(Bd, Color.Branca));

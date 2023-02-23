@@ -1,27 +1,30 @@
 ﻿namespace boardgame {
-    abstract class Piece {
-
-        public Position position { get; set; }
-        public Color color { get; protected set; }
-        public int qtyMoviments { get; protected set; }
-        public Board Bd { get; protected set; }
+    abstract class Piece 
+    {
+        // Classe abstrata 'Peca' 
+        public Position position { get; set; } // posicao
+        public Color color { get; protected set; } // cor
+        public int qtyMoviments { get; protected set; } // Quantidade de movimentos
+        public Board Bd { get; protected set; } // tabuleiro
          
-        public Piece(Board bd, Color color) {
+        public Piece(Board bd, Color color) // construtor
+        {
             this.position = null;
             this.Bd = bd;
             this.color = color;
             this.qtyMoviments = 0;
         }
 
-        public void addQtyMoviments() {
+        public void addQtyMoviments() // incrementa a quantidade de movimento de uma peca
+        {
             qtyMoviments++;
         }
-        public void removeQtyMoviments()
+        public void removeQtyMoviments() // decrementa a quantidade de movimento de uma peca
         {
             qtyMoviments--;
         }
 
-        public bool PossibleMovesExists()
+        public bool PossibleMovesExists() // Verifica se existe algum movimento possível das pecas no tabuleiro
         {
             bool[,] mat = PossibleMoves();
 
@@ -38,11 +41,11 @@
             return false;
         }
 
-        public bool PossibleMove(Position pos)
+        public bool PossibleMove(Position pos) // metodo que retorna os movimentos possiveis de uma peca escolhida
         {
             return PossibleMoves()[pos.row, pos.column];
         }
-        public abstract bool[,] PossibleMoves();
+        public abstract bool[,] PossibleMoves(); // metodo abstrato movimentos possiveis 
 
     }
 }

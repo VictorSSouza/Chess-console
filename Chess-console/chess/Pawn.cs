@@ -4,31 +4,34 @@ namespace chess
 {
     internal class Pawn : Piece
     {
-        private ChessMatch match; 
-        public Pawn(Board bd, Color color, ChessMatch match) : base(bd, color) 
+        // Classe 'Peao' que herda da classe 'Peca' o metodo 'PossibleMoves'
+        private ChessMatch match; // variavel da Partida de xadrez
+        public Pawn(Board bd, Color color, ChessMatch match) : base(bd, color) // construtor
         {
             this.match = match;
         }
-        public override string ToString()
+        public override string ToString() // metodo para representar o Peao no tabuleiro
         {
             return "P";
         }
-        private bool OpponentExist(Position pos)
+        private bool OpponentExist(Position pos) // verificar se existe um oponente 
         {
             Piece p = Bd.piece(pos);
             return p != null && p.color != this.color;
         }
-        private bool Free(Position pos)
+        private bool Free(Position pos) // verifica se a posicao de movimento esta livre
         {
             return Bd.piece(pos) == null; 
         }
-        public override bool[,] PossibleMoves()
+        public override bool[,] PossibleMoves() // metodo que retorna a matriz(array) com os movimentos possiveis
         {
             bool[,] mat = new bool[Bd.rows, Bd.columns];
 
-            Position pos = new Position(0, 0);
+            Position pos = new Position(0, 0); // iniciando a variavel
 
-            if(color == Color.Branca)
+            /* A peca do peao se move sempre uma linha para frente, exceto no primeiro movimento, quando pode mover-se duas linhas, o peao e a unica peça que não pode retroceder e tambem ela so pode captura uma peca na diagonal para frente */
+
+            if (color == Color.Branca) // pecas brancas
             {
                 // acima 1 casa
                 pos.SetValues(position.row - 1, position.column);
@@ -59,8 +62,13 @@ namespace chess
                     mat[pos.row, pos.column] = true;
                 }
 
-                // :)jogadaEspecial EnPassant
-                if(position.row == 3)
+                /* :)jogadaEspecial EnPassant,ou 'de passagem' e uma regra especial do xadrez que permite ao peao capturar um outro peao que acabou de passar por ele.
+                 * O peao de captura deve ter avançado exatamente tres fileiras para executar este lance.
+                 * O peao capturado deve ter movido duas casas em um lance, aterrissando ao lado do peao que vai captura-lo.
+                 * A captura en passant deve ser realizada no lance imediatamente apos o movimento do peao que esta prestes a ser capturado.
+                 * Se o jogador nao fizer a captura en passant nesse turno, ele nao pode fazer isso depois. */
+
+                if (position.row == 3) // linha 5
                 {
                     // esquerda acima
                     Position left = new Position(position.row, position.column - 1);
@@ -76,7 +84,7 @@ namespace chess
                     }
                 }
             }
-            else
+            else // pecas pretas
             {
                 // abaixo 1 casa
                 pos.SetValues(position.row + 1, position.column);
@@ -107,8 +115,8 @@ namespace chess
                     mat[pos.row, pos.column] = true;
                 }
 
-                // :)jogadaEspecial EnPassant
-                if (position.row == 4)
+                // :)jogadaEspecial EnPassant, ou 'de passagem' e uma regra especial do xadrez que permite ao peao capturar um outro peao que acabou de passar por ele.
+                if (position.row == 4) // linha 4
                 {
                     // esquerda abaixo
                     Position left = new Position(position.row, position.column - 1);

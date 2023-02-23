@@ -4,23 +4,28 @@ namespace chess
 {
     internal class Queen : Piece
     {
-        public Queen(Board bd, Color color) : base(bd, color){ }
+        // Classe 'Rainha' ou 'Dama' que herda da classe 'Peca' o metodo 'PossibleMoves'
+        public Queen(Board bd, Color color) : base(bd, color) // construtor
+        { }
 
-        public override string ToString()
+        public override string ToString() // metodo para representar a Dama no tabuleiro
         {
             return "D";
         }
-        private bool CanMove(Position pos)
+        private bool CanMove(Position pos) // verificar se e possivel mover a peca dependendo da posicao
         {
             Piece p = Bd.piece(pos);
             return p == null || p.color != this.color;
         }
 
-        public override bool[,] PossibleMoves()
+        public override bool[,] PossibleMoves() // metodo que retorna a matriz(array) com os movimentos possiveis
         {
             bool[,] mat = new bool[Bd.rows, Bd.columns];
 
-            Position pos = new Position(0,0);
+            Position pos = new Position(0,0); // iniciando a variavel
+
+            /* A peca da dama e considerada a peca mais poderosa, pode mover quantas casas quiser na horizontal e na vertical (como a torre) e dama também pode mover quantas casas quiser na diagonal (como o bispo). 
+             * */
 
             // esquerda
             pos.SetValues(position.row, position.column - 1);

@@ -1,6 +1,7 @@
 ﻿namespace boardgame {
-    enum Color {
-
+    enum Color 
+    {
+        
         Branca,
         Preta,
         Amarela,
